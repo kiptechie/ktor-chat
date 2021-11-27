@@ -12,8 +12,10 @@ import io.ktor.sessions.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.channels.consumeEach
 
+const val BASE_URL = "ktor-chat"
+
 fun Route.chatSocket(roomController: RoomController) {
-    webSocket("/chat-socket") {
+    webSocket("$BASE_URL/chat-socket") {
         val session = call.sessions.get<ChatSession>()
         if (session == null) {
             close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "No session."))
@@ -44,7 +46,7 @@ fun Route.chatSocket(roomController: RoomController) {
 }
 
 fun Route.getAllMessages(roomController: RoomController) {
-    get("/messages") {
+    get("$BASE_URL/messages") {
         call.respond(
             HttpStatusCode.OK,
             roomController.getAllMessages()
